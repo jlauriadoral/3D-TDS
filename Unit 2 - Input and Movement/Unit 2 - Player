@@ -2,26 +2,40 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float moveSpeed;
-    public Rigidbody rb;
+    private Rigidbody rb;
 
-    public float verticalInput;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [Header("Movement data")]
+    public float moveSpeed;
+    public float rotationSpeed;
+   
+
+    private float verticalInput;
+    private float horizontalInput;
+    [Space]
+    public LayerMask whatIsAimMask;
+
+
+    private void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame // 120 fps 120 per second
     void Update()
     {
         verticalInput = Input.GetAxis("Vertical");
+        horizontalInput = Input.GetAxis("Horizontal");
+
+        if (verticalInput < 0)
+            horizontalInput = -Input.GetAxis("Horizontal");
     }
 
-    // You can see timestep in project settings > time
+   
 
     private void FixedUpdate()
     {
-        rb.linearVelocity = new Vector3(0, 0, moveSpeed * verticalInput);
+        Vector3 movement = transform.forward * moveSpeed * verticalInput;
+        rb.linearVelocity = movement;
+
+        transform.Rotate(0, horizontalInput * rotationSpeed, 0);
     }
 }
