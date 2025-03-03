@@ -1,20 +1,16 @@
 using Unity.Cinemachine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
     public static CameraManager instance;
 
+    private CinemachineVirtualCamera cinemachineCamera;
+    private CinemachineFollow followComponent;
 
-    private Cinemachine.CinemachineCamera cinemachineCamera;
-    private CinemachinePositionComposer composer;
-
-
-    [Header("Camera distance")]
-    [SerializeField] private bool canChangeCameraDistance;
-    [SerializeField] private float distanceChangeRate;
+    [Header("Camera Distance")]
+    [SerializeField] private bool canChangeCameraDistance = true;
+    [SerializeField] private float distanceChangeRate = 2f;
     private float targetCameraDistance;
 
     private void Awake()
@@ -23,15 +19,23 @@ public class CameraManager : MonoBehaviour
             instance = this;
         else
         {
-            Debug.LogWarning("You had more than one Camera Manager");
+            Debug.LogWarning("More than one Camera Manager detected. Destroying duplicate.");
             Destroy(gameObject);
         }
 
-
-        cinemachineCamera = GetComponentInChildren<CinemachineCamera>();
-        composer = cinemachineCamera.GetComponent<CinemachinePositionComposer>();
-
-
+        cinemachineCamera = GetComponentInChildren<CinemachineVirtualCamera>();
+        if (cinemachineCamera != null)
+        {
+            followComponent = cinemachineCamera.GetComponent<CinemachineFollow>();
+            if (followComponent == null)
+            {
+                Debug.LogError("CinemachineFollow component is missing on the Virtual Camera.");
+            }
+        }
+        else
+        {
+            Debug.LogError("CinemachineVirtualCamera is missing.");
+        }
     }
 
     private void Update()
@@ -41,19 +45,20 @@ public class CameraManager : MonoBehaviour
 
     private void UpdateCameraDistance()
     {
-        if (canChangeCameraDistance == false)
+        if (!canChangeCameraDistance || followComponent == null)
             return;
 
-        float currentDistance = composer.m_CameraDistance;
-
-        if (Mathf.Abs(targetCameraDistance - currentDistance) < .01f)
+        Vector3 currentOffset = followComponent.FollowOffset;
+        float currentDistance = currentOffset.z;
+        if (Mathf.Abs(targetCameraDistance - currentDistance) < 0.01f)
             return;
 
-        composer.m_CameraDistance =
-            Mathf.Lerp(currentDistance, targetCameraDistance, distanceChangeRate * Time.deltaTime);
+        float newDistance = Mathf.Lerp(currentDistance, targetCameraDistance, distanceChangeRate * Time.deltaTime);
+        followComponent.FollowOffset = new Vector3(currentOffset.x, currentOffset.y, newDistance);
     }
 
-    public void ChangeCameraDistance(float distance) => targetCameraDistance = distance;
-
-
+    public void ChangeCameraDistance(float distance)
+    {
+        targetCameraDistance = distance;
+    }
 }
