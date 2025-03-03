@@ -1,4 +1,4 @@
-using Cinemachine;
+using Unity.Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,8 +8,8 @@ public class CameraManager : MonoBehaviour
     public static CameraManager instance;
 
 
-    private CinemachineVirtualCamera virtualCamera;
-    private CinemachineFramingTransposer transposer;
+    private Cinemachine.CinemachineCamera cinemachineCamera;
+    private CinemachinePositionComposer composer;
 
 
     [Header("Camera distance")]
@@ -28,8 +28,9 @@ public class CameraManager : MonoBehaviour
         }
 
 
-        virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
-        transposer = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+        cinemachineCamera = GetComponentInChildren<CinemachineCamera>();
+        composer = cinemachineCamera.GetComponent<CinemachinePositionComposer>();
+
 
     }
 
@@ -43,13 +44,13 @@ public class CameraManager : MonoBehaviour
         if (canChangeCameraDistance == false)
             return;
 
-        float currentDistnace = transposer.m_CameraDistance;
+        float currentDistance = composer.m_CameraDistance;
 
-        if (Mathf.Abs(targetCameraDistance - currentDistnace) < .01f)
+        if (Mathf.Abs(targetCameraDistance - currentDistance) < .01f)
             return;
-        
-        transposer.m_CameraDistance =
-            Mathf.Lerp(currentDistnace, targetCameraDistance, distanceChangeRate * Time.deltaTime);
+
+        composer.m_CameraDistance =
+            Mathf.Lerp(currentDistance, targetCameraDistance, distanceChangeRate * Time.deltaTime);
     }
 
     public void ChangeCameraDistance(float distance) => targetCameraDistance = distance;
