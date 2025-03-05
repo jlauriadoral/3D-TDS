@@ -5,7 +5,7 @@ public class CameraManager : MonoBehaviour
 {
     public static CameraManager instance;
 
-    private CinemachineVirtualCamera cinemachineCamera;
+    private CinemachineCamera cinemachineCamera;
     private CinemachineFollow followComponent;
 
     [Header("Camera Distance")]
@@ -23,19 +23,7 @@ public class CameraManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        cinemachineCamera = GetComponentInChildren<CinemachineVirtualCamera>();
-        if (cinemachineCamera != null)
-        {
-            followComponent = cinemachineCamera.GetComponent<CinemachineFollow>();
-            if (followComponent == null)
-            {
-                Debug.LogError("CinemachineFollow component is missing on the Virtual Camera.");
-            }
-        }
-        else
-        {
-            Debug.LogError("CinemachineVirtualCamera is missing.");
-        }
+
     }
 
     private void Update()
