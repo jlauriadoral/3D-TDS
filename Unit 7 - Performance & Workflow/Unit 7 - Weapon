@@ -29,7 +29,7 @@ public class Weapon
     private float lastShootTime;
     #endregion
     #region Burst mode  variables
-    private bool burstAvalible;
+    private bool burstAvailable;
     public bool burstActive;
 
     private int burstBulletsPerShot;
@@ -76,7 +76,7 @@ public class Weapon
         shootType = weaponData.shootType;
 
 
-        burstAvalible = weaponData.burstAvalible;
+        burstAvailable = weaponData.burstAvailable;
         burstActive = weaponData.burstActive;
         burstBulletsPerShot = weaponData.burstBulletsPerShot;
         burstFireRate = weaponData.burstFireRate;
@@ -145,7 +145,7 @@ public class Weapon
 
     public void ToggleBurst()
     {
-        if (burstAvalible == false)
+        if (burstAvailable == false)
             return;
 
         burstActive = !burstActive;
