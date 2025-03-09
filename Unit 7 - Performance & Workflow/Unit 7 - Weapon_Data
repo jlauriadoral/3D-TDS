@@ -19,7 +19,7 @@ public class Weapon_Data : ScriptableObject
 
 
     [Header("Burst shot")]
-    public bool burstAvalible;
+    public bool burstAvailable;
     public bool burstActive;
     public int burstBulletsPerShot;
     public float burstFireRate;
