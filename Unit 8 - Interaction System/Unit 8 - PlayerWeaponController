@@ -229,7 +229,7 @@ public class PlayerWeaponController : MonoBehaviour
             }
         };
 
-        controls.Character.ToogleWeaponMode.performed += context => currentWeapon.ToggleBurst();
+        controls.Character.ToggleWeaponMode.performed += context => currentWeapon.ToggleBurst();
 
     }
 
